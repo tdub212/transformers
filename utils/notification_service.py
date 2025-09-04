@@ -1506,7 +1506,7 @@ if __name__ == "__main__":
     os.makedirs(output_dir, exist_ok=True)
 
     prev_workflow_run_id = "17459831374"
-    other_workflow_run_ids = "17451670364"
+    other_workflow_run_ids = ["17451670364"]
 
 
     for idx, target_workflow_run_id in enumerate([prev_workflow_run_id] + other_workflow_run_ids):
