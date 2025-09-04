@@ -52,6 +52,8 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           run-id: 17459831374
+          github-token: ${{ secrets.ACCESS_REPO_INFO_TOKEN }}
+          repository: huggingface/transformers
 
       - name: Prepare some setup values
         run: |
