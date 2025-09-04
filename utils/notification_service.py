@@ -1164,6 +1164,8 @@ if __name__ == "__main__":
                 artifact_name_to_job_map[artifact_name] = job
                 break
 
+    import os
+    os.system("ls -la")
     available_artifacts = retrieve_available_artifacts()
 
     test_categories = [
@@ -1200,6 +1202,8 @@ if __name__ == "__main__":
         for matrix_name in job_matrix
         if f"{report_name_prefix}_{matrix_name}_test_reports" in available_artifacts
     }
+    print(len(matrix_job_results))
+    print(matrix_job_results)
 
     unclassified_model_failures = []
 
