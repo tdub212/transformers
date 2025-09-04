@@ -125,7 +125,6 @@ jobs:
       - name: Update clone
         working-directory: /transformers
         run: git fetch && git checkout ${{ inputs.commit_sha || github.sha }}
-    secrets: inherit
 
   run_trainer_and_fsdp_gpu:
     if: ${{ inputs.job == 'run_trainer_and_fsdp_gpu' }}
