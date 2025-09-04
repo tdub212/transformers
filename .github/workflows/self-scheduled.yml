@@ -116,21 +116,15 @@ jobs:
     if: ${{ inputs.job == 'run_models_gpu' }}
     name: " "
     needs: setup
-    strategy:
-      fail-fast: false
-      matrix:
-        machine_type: [single-gpu, multi-gpu]
-        slice_id: ${{ fromJSON(needs.setup.outputs.slice_ids) }}
-    uses: ./.github/workflows/model_jobs.yml
-    with:
-      folder_slices: ${{ needs.setup.outputs.folder_slices }}
-      machine_type: ${{ matrix.machine_type }}
-      slice_id: ${{ matrix.slice_id }}
-      runner_map: ${{ needs.setup.outputs.runner_map }}
-      docker: ${{ inputs.docker }}
-      commit_sha: ${{ inputs.commit_sha || github.sha }}
-      runner_type: ${{ inputs.runner_type }}
-      report_repo_id: ${{ inputs.report_repo_id }}
+    runs-on:
+      group: '${{ matrix.machine_type }}'
+    container:
+      image: huggingface/transformers-all-latest-gpu
+      options: --gpus all --shm-size "16gb" --ipc host -v /mnt/cache/.cache/huggingface:/mnt/cache/
+    steps:
+      - name: Update clone
+        working-directory: /transformers
+        run: git fetch && git checkout ${{ inputs.commit_sha || github.sha }}
     secrets: inherit
 
   run_trainer_and_fsdp_gpu:

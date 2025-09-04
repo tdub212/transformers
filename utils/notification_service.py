@@ -229,7 +229,7 @@ class Message:
             "accessory": {
                 "type": "button",
                 "text": {"type": "plain_text", "text": "Check Action results", "emoji": True},
-                "url": f"https://github.com/huggingface/transformers/actions/runs/{os.environ['GITHUB_RUN_ID']}",
+                "url": f"https://github.com/huggingface/transformers/actions/runs/{17459831374}",
             },
         }
 
@@ -248,7 +248,7 @@ class Message:
             "accessory": {
                 "type": "button",
                 "text": {"type": "plain_text", "text": "Check Action results", "emoji": True},
-                "url": f"https://github.com/huggingface/transformers/actions/runs/{os.environ['GITHUB_RUN_ID']}",
+                "url": f"https://github.com/huggingface/transformers/actions/runs/{17459831374}",
             },
         }
 
@@ -257,7 +257,7 @@ class Message:
         # If something goes wrong, let's avoid the CI report failing to be sent.
         button_text = "Check warnings (Link not found)"
         # Use the workflow run link
-        job_link = f"https://github.com/huggingface/transformers/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+        job_link = f"https://github.com/huggingface/transformers/actions/runs/{17459831374}"
 
         for job in github_actions_jobs:
             if "Extract warnings in CI artifacts" in job["name"] and job["conclusion"] == "success":
@@ -745,7 +745,7 @@ class Message:
             "accessory": {
                 "type": "button",
                 "text": {"type": "plain_text", "text": "Check Action results", "emoji": True},
-                "url": f"https://github.com/huggingface/transformers/actions/runs/{os.environ['GITHUB_RUN_ID']}",
+                "url": f"https://github.com/huggingface/transformers/actions/runs/{17459831374}",
             },
         }
         blocks.extend([error_block_1, error_block_2])
@@ -1152,7 +1152,7 @@ if __name__ == "__main__":
             raise ValueError("Errored out.")
 
     github_actions_jobs = get_jobs(
-        workflow_run_id=os.environ["GITHUB_RUN_ID"], token=os.environ["ACCESS_REPO_INFO_TOKEN"]
+        workflow_run_id=17459831374, token=os.environ["ACCESS_REPO_INFO_TOKEN"]
     )
     github_actions_job_links = {job["name"]: job["html_url"] for job in github_actions_jobs}
 
@@ -1475,6 +1475,8 @@ if __name__ == "__main__":
     prev_workflow_run_id = None
     other_workflow_run_ids = []
 
+    is_scheduled_ci_run = True
+
     if is_scheduled_ci_run:
         prev_workflow_run_id = get_last_daily_ci_workflow_run_id(
             token=os.environ["ACCESS_REPO_INFO_TOKEN"], workflow_id=workflow_id
@@ -1498,6 +1500,10 @@ if __name__ == "__main__":
 
     output_dir = os.path.join(os.getcwd(), "previous_reports")
     os.makedirs(output_dir, exist_ok=True)
+
+    prev_workflow_run_id = "17459831374"
+    other_workflow_run_ids = "17451670364"
+
 
     for idx, target_workflow_run_id in enumerate([prev_workflow_run_id] + other_workflow_run_ids):
         if target_workflow_run_id is None or target_workflow_run_id == "":
