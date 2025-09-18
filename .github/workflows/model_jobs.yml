@@ -128,6 +128,13 @@ jobs:
           echo "machine_type=$machine_type" >> $GITHUB_ENV
           echo "machine_type=$machine_type" >> $GITHUB_OUTPUT
 
+      - name: Create report directory if it doesn't exist
+        shell: bash
+        run: |
+          mkdir -p /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports
+          echo "dummy" > /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports/dummy.txt
+          ls -la "${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports"
+
       - name: Run all tests on GPU
         working-directory: /transformers
         run: |
@@ -142,14 +149,9 @@ jobs:
       - name: Captured information
         if: ${{ failure() }}
         continue-on-error: true
-        run: cat /transformers/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}/captured_info.txt
-
-      - name: Create report directory if it doesn't exist
-        shell: bash
         run: |
-          mkdir -p /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports
-          echo "dummy" > /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports/dummy.txt
-          ls -la "${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports"
+          cat /transformers/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}/captured_info.txt
+          cp /transformers/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}/captured_info.txt /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports
 
       - name: "Test suite reports artifacts: ${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports"
         if: ${{ always() }}
@@ -157,13 +159,6 @@ jobs:
         with:
           name: ${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports
           path: /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports
-
-      - name: "Upload artifacts: ${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}/captured_info.txt"
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_captured_info
-          path: /transformers/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}/captured_info.txt
 
   collated_reports:
     name: Collated Reports

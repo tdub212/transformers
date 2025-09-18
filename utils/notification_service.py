@@ -1196,6 +1196,7 @@ if __name__ == "__main__":
             "time_spent": [],
             "failures": {},
             "job_link": {},
+            "captured_info": {}
         }
         for matrix_name in job_matrix
         if f"{report_name_prefix}_{matrix_name}_test_reports" in available_artifacts
@@ -1224,6 +1225,10 @@ if __name__ == "__main__":
                 matrix_job_results[matrix_name]["time_spent"].append(float(time_spent[:-1]))
 
                 stacktraces = handle_stacktraces(artifact["failures_line"])
+
+                # Add the captured actual outputs for patched methods (`torch.testing.assert_close`, `assertEqual` etc.)
+                if "captured_info" in artifact:
+                    matrix_job_results[matrix_name]["captured_info"][artifact_gpu] = artifact["captured_info"]
 
                 # TODO: ???
                 for line in artifact["summary_short"].split("\n"):
