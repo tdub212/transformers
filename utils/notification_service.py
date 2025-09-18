@@ -1228,7 +1228,17 @@ if __name__ == "__main__":
 
                 # Add the captured actual outputs for patched methods (`torch.testing.assert_close`, `assertEqual` etc.)
                 if "captured_info" in artifact:
-                    matrix_job_results[matrix_name]["captured_info"][artifact_gpu] = artifact["captured_info"]
+                    step_number = None
+                    for step in job.get("steps", []):
+                        if step["name"] == "Captured information":
+                            step_number = step["number"]
+                            break
+                    if step_number is not None:
+                        step_link = f'{job["html_url"]}#step:{step_number}:1'
+                        matrix_job_results[matrix_name]["captured_info"][artifact_gpu] = {
+                            "link": step_link,
+                            "captured_info": artifact["captured_info"],
+                        }
 
                 # TODO: ???
                 for line in artifact["summary_short"].split("\n"):
