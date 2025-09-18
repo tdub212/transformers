@@ -133,13 +133,12 @@ jobs:
         run: |
           mkdir -p /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports
           echo "dummy" > /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports/dummy.txt
-          ls -la "${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports"
+          ls -la /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports
 
       - name: Run all tests on GPU
         working-directory: /transformers
         run: |
-          mkdir -p ${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}
-          PATCH_TESTING_METHODS_TO_COLLECT_OUTPUTS=yes _PATCHED_TESTING_METHODS_OUTPUT_DIR=${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }} python3 -m pytest -rsfE -v --make-reports=${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports tests/${{ matrix.folders }}
+          PATCH_TESTING_METHODS_TO_COLLECT_OUTPUTS=yes _PATCHED_TESTING_METHODS_OUTPUT_DIR=/transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports python3 -m pytest -rsfE -v --make-reports=${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports tests/${{ matrix.folders }}
 
       - name: Failure short reports
         if: ${{ failure() }}
@@ -150,8 +149,7 @@ jobs:
         if: ${{ failure() }}
         continue-on-error: true
         run: |
-          cat /transformers/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}/captured_info.txt
-          cp /transformers/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}/captured_info.txt /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports
+          cat /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports/captured_info.txt
 
       - name: "Test suite reports artifacts: ${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports"
         if: ${{ always() }}
