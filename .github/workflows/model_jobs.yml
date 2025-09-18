@@ -139,6 +139,11 @@ jobs:
         continue-on-error: true
         run: cat /transformers/reports/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}_test_reports/failures_short.txt
 
+      - name: Captured information
+        if: ${{ failure() }}
+        continue-on-error: true
+        run: cat /transformers/${{ env.machine_type }}_${{ inputs.report_name_prefix }}_${{ env.matrix_folders }}/captured_info.txt
+
       - name: Run test
         shell: bash
         run: |
