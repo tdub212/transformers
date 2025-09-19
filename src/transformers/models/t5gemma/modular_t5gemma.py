@@ -476,7 +476,7 @@ class T5GemmaPreTrainedModel(Gemma2PreTrainedModel):
     config: T5GemmaConfig
     base_model_prefix = "model"
     supports_gradient_checkpointing = True
-    _no_split_modules = ["T5GemmaBlock"]
+    _no_split_modules = ["T5GemmaEncoderLayer", "T5GemmaDecoderLayer"]
 
     def _init_weights(self, module):
         # TODO: support initialization for encoders and decoders separately(?)
@@ -491,6 +491,9 @@ class T5GemmaPreTrainedModel(Gemma2PreTrainedModel):
             if not self.config.tie_word_embeddings:
                 scale = module.out_proj.weight.shape[0] ** -0.5
                 module.out_proj.weight.data.normal_(mean=0.0, std=std * scale)
+        # We initialize with 0s to be 1 centered as the RMSNorm here does (1 + weight)
+        elif "RMSNorm" in module.__class__.__name__:
+            module.weight.data.zero_()
 
     def _shift_right(self, input_ids):
         """
