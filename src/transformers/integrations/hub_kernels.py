@@ -84,6 +84,33 @@ try:
                 )
             },
         },
+        "FastGELU": {
+            "cuda": {
+                Mode.INFERENCE | Mode.TORCH_COMPILE: LayerRepository(
+                    repo_id="kernels-community/activation",
+                    layer_name="FastGELU",
+                    version=">=0.0.4,<0.1.0",
+                )
+            }
+        },
+        "QuickGELU": {
+            "cuda": {
+                Mode.INFERENCE | Mode.TORCH_COMPILE: LayerRepository(
+                    repo_id="kernels-community/activation",
+                    layer_name="QuickGELU",
+                    version=">=0.0.4,<0.1.0",
+                )
+            }
+        },
+        "NewGELU": {
+            "cuda": {
+                Mode.INFERENCE | Mode.TORCH_COMPILE: LayerRepository(
+                    repo_id="kernels-community/activation",
+                    layer_name="NewGELU",
+                    version=">=0.0.4,<0.1.0",
+                )
+            }
+        },
     }
 
     register_kernel_mapping(_KERNEL_MAPPING)
@@ -155,7 +182,7 @@ def load_and_register_kernel(attn_implementation: str) -> None:
     try:
         kernel = get_kernel(repo_id, revision=rev)
     except Exception as e:
-        raise ValueError(f"An error occured while trying to load from '{repo_id}': {e}.")
+        raise ValueError(f"An error occurred while trying to load from '{repo_id}': {e}.")
     # correctly wrap the kernel
     if hasattr(kernel, "flash_attn_varlen_func"):
         if attention_wrapper is None:

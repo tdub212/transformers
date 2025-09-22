@@ -21,8 +21,9 @@ import importlib
 import io
 import os
 import warnings
+from collections.abc import Sequence
 from io import BytesIO
-from typing import Any, Optional, Sequence, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 import requests
@@ -369,7 +370,7 @@ def chroma_filter_bank(
     tuning: float = 0.0,
     power: Optional[float] = 2.0,
     weighting_parameters: Optional[tuple[float, float]] = (5.0, 2.0),
-    start_at_c_chroma: Optional[bool] = True,
+    start_at_c_chroma: bool = True,
 ):
     """
     Creates a chroma filter bank, i.e a linear transformation to project spectrogram bins onto chroma bins.
@@ -390,7 +391,7 @@ def chroma_filter_bank(
         weighting_parameters (`tuple[float, float]`, *optional*, defaults to `(5., 2.)`):
             If specified, apply a Gaussian weighting parameterized by the first element of the tuple being the center and
             the second element being the Gaussian half-width.
-        start_at_c_chroma (`float`, *optional*, defaults to `True`):
+        start_at_c_chroma (`bool`, *optional*, defaults to `True`):
             If True, the filter bank will start at the 'C' pitch class. Otherwise, it will start at 'A'.
     Returns:
         `np.ndarray` of shape `(num_frequency_bins, num_chroma)`
@@ -626,7 +627,7 @@ def spectrogram(
     reference: float = 1.0,
     min_value: float = 1e-10,
     db_range: Optional[float] = None,
-    remove_dc_offset: Optional[bool] = None,
+    remove_dc_offset: bool = False,
     dtype: np.dtype = np.float32,
 ) -> np.ndarray:
     """
@@ -837,7 +838,7 @@ def spectrogram_batch(
     reference: float = 1.0,
     min_value: float = 1e-10,
     db_range: Optional[float] = None,
-    remove_dc_offset: Optional[bool] = None,
+    remove_dc_offset: bool = False,
     dtype: np.dtype = np.float32,
 ) -> list[np.ndarray]:
     """

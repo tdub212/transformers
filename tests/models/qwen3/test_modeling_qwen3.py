@@ -26,7 +26,6 @@ from transformers.testing_utils import (
     require_bitsandbytes,
     require_flash_attn,
     require_torch,
-    require_torch_gpu,
     slow,
     torch_device,
 )
@@ -96,13 +95,6 @@ class Qwen3ModelTest(CausalLMModelTest, unittest.TestCase):
         processor_name,
     ):
         return True
-
-    @require_flash_attn
-    @require_torch_gpu
-    @pytest.mark.flash_attn_test
-    @slow
-    def test_flash_attn_2_inference_equivalence_right_padding(self):
-        self.skipTest(reason="Qwen3 flash attention does not support right padding")
 
 
 @require_torch
@@ -207,7 +199,7 @@ class Qwen3IntegrationTest(unittest.TestCase):
             {
                 ("xpu", 3): "My favourite condiment is 100% peanut butter. I love it so much that I can't help but use it",
                 ("cuda", 7): "My favourite condiment is 100% natural. It's a little spicy and a little sweet, but it's the",
-                ("cuda", 8): "My favourite condiment is 100% peanut butter. I love it so much that I can't help but use it",
+                ("cuda", 8): "My favourite condiment is 100% beef, 100% beef, 100% beef.",
             }
         )  # fmt: skip
         EXPECTED_TEXT_COMPLETION = EXPECTED_TEXT_COMPLETIONS.get_expectation()

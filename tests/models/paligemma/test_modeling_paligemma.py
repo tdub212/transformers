@@ -264,9 +264,7 @@ class PaliGemmaForConditionalGenerationModelTest(ModelTesterMixin, GenerationTes
     def test_model_parallelism(self):
         pass
 
-    @unittest.skip(
-        reason="PaliGemma's SigLip encoder uses the same initialization scheme as the Flax original implementation"
-    )
+    @unittest.skip(reason="PaliGemma's SigLip encoder uses a non-standard initialization scheme")
     def test_initialization(self):
         pass
 
@@ -378,7 +376,10 @@ class PaliGemmaForConditionalGenerationIntegrationTest(unittest.TestCase):
         processor = PaliGemmaProcessor.from_pretrained(model_id)
         prompt = "answer en There is no snowman in any of the images. Is this true or false?"
         stop_sign_image = Image.open(
-            requests.get("https://www.ilankelman.org/stopsigns/australia.jpg", stream=True).raw
+            requests.get(
+                "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformers/tasks/australia.jpg",
+                stream=True,
+            ).raw
         )
         snow_image = Image.open(
             requests.get(
